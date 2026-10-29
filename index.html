@@ -1,0 +1,642 @@
+<!doctype html>
+<html lang="my">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Win Innwa လက်ကွက်</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="theme-color" content="#171e27">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=JetBrains+Mono:wght@500;700&family=Noto+Sans+Myanmar:wght@400;600;700&family=Noto+Serif+Myanmar:wght@500;600&display=swap">
+<style>
+/* Layout: practice stage + side guide on wide screens; guide drops between stage and keyboard on phones. */
+:root {
+  --bg: #eceff3; --surface: #ffffff; --surface-2: #f5f7fa; --ink: #18212c; --muted: #5a6575; --line: #d4dae2;
+  --accent: #b8650f; --accent-ink: #ffffff; --accent-soft: #f7e6cf;
+  --ok: #1d8566; --ok-soft: #d8f0e7; --bad: #c13a31; --bad-soft: #f8dedb;
+  --key: #fbfcfd; --key-edge: #b9c1cc; --key-shadow: #9aa4b1;
+  --f1: #c76b8a; --f2: #8a6fc4; --f3: #3f8fb8; --f4: #3c9a6b; --f5: #b8650f;
+  --font-ui: "Noto Sans Myanmar", "Myanmar Text", "Padauk", system-ui, sans-serif;
+  --font-text: "Noto Serif Myanmar", "Noto Sans Myanmar", "Myanmar Text", "Padauk", serif;
+  --font-display: "Bricolage Grotesque", "Noto Sans Myanmar", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --r: 10px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1319; --surface: #161d26; --surface-2: #1b2430; --ink: #e6eaf0; --muted: #94a0b0; --line: #283240;
+    --accent: #e89a44; --accent-ink: #1a1208; --accent-soft: #3a2914;
+    --ok: #3cc196; --ok-soft: #12352b; --bad: #f06b61; --bad-soft: #3c1b19;
+    --key: #222c38; --key-edge: #0b0f14; --key-shadow: #06090c;
+    --f1: #e08aa6; --f2: #a993e0; --f3: #64b3db; --f4: #5cc08e; --f5: #e89a44;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1319; --surface: #161d26; --surface-2: #1b2430; --ink: #e6eaf0; --muted: #94a0b0; --line: #283240;
+  --accent: #e89a44; --accent-ink: #1a1208; --accent-soft: #3a2914;
+  --ok: #3cc196; --ok-soft: #12352b; --bad: #f06b61; --bad-soft: #3c1b19;
+  --key: #222c38; --key-edge: #0b0f14; --key-shadow: #06090c;
+  --f1: #e08aa6; --f2: #a993e0; --f3: #64b3db; --f4: #5cc08e; --f5: #e89a44;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html, body { margin: 0; }
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.7;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 24px; -webkit-tap-highlight-color: transparent;
+}
+button { font: inherit; color: inherit; }
+button:focus-visible, select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.wrap { max-width: 1240px; margin: 0 auto; }
+
+/* Header */
+header.top { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding-block: 14px 10px; }
+.brand { display: flex; align-items: baseline; gap: 10px; }
+.brand b { font-family: var(--font-display); font-weight: 800; font-size: 22px; letter-spacing: -.01em; }
+.brand span { color: var(--muted); font-size: 13px; }
+nav.tabs { display: flex; gap: 4px; background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 3px; }
+nav.tabs button { border: 0; background: none; padding: 4px 14px; border-radius: 999px; cursor: pointer; font-size: 14px; }
+nav.tabs button[aria-selected="true"] { background: var(--ink); color: var(--bg); }
+
+/* Levels */
+.levels { display: flex; gap: 8px; overflow-x: auto; padding-block: 4px 8px; scrollbar-width: thin; }
+.lvl { flex: 0 0 auto; width: 150px; text-align: left; border: 1px solid var(--line); background: var(--surface); border-radius: var(--r);
+  padding: 8px 10px 9px; cursor: pointer; display: grid; gap: 2px; }
+.lvl small { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-family: var(--font-mono); font-size: 11px; color: var(--muted); letter-spacing: .06em; }
+.lvl .nm { font-size: 13px; font-weight: 600; line-height: 1.45; min-height: 2.9em; }
+.lvl .bar { height: 4px; background: var(--surface-2); border-radius: 2px; overflow: hidden; }
+.lvl .bar i { display: block; height: 100%; background: var(--ok); width: 0; }
+.lvl[aria-pressed="true"] { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+.lvl .diff { display: flex; gap: 2px; }
+.lvl .diff i { width: 8px; height: 3px; border-radius: 1px; background: var(--line); }
+.lvl .diff i.on { background: var(--accent); }
+
+.items { display: flex; flex-wrap: wrap; gap: 5px; padding-block: 2px 12px; }
+.items button { min-width: 34px; height: 30px; border: 1px solid var(--line); background: var(--surface); border-radius: 7px; cursor: pointer;
+  font-family: var(--font-mono); font-size: 12px; font-variant-numeric: tabular-nums; }
+.items button.done { background: var(--ok-soft); border-color: transparent; color: var(--ok); }
+.items button[aria-current="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+
+/* Workspace */
+.work { display: grid; grid-template-columns: minmax(0, 1fr) 320px; grid-template-areas: "stage guide" "kbd guide"; gap: 14px; align-items: start; }
+.stage { grid-area: stage; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; min-width: 0; }
+.guide { grid-area: guide; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 16px; position: sticky; top: max(12px, env(safe-area-inset-top, 0px)); min-width: 0; }
+.kbdwrap { grid-area: kbd; min-width: 0; }
+@media (max-width: 900px) {
+  .work { grid-template-columns: minmax(0, 1fr); grid-template-areas: "stage" "guide" "kbd"; gap: 10px; }
+  .guide { position: static; padding: 12px 14px; }
+}
+
+.note { color: var(--muted); font-size: 13px; margin: 0 0 10px; }
+.target { font-family: var(--font-text); font-size: clamp(24px, 4.2vw, 38px); line-height: 2.05; word-break: break-word; margin: 0; min-height: 2.1em; }
+.target .c { color: var(--muted); opacity: .55; border-radius: 4px; transition: color .12s; }
+.target .c.done { color: var(--ok); opacity: 1; }
+.target .c.cur { color: var(--ink); opacity: 1; background: var(--accent-soft); box-shadow: 0 3px 0 var(--accent); }
+.target .c.sp { padding: 0 .12em; }
+
+.tiles { display: flex; flex-wrap: wrap; gap: 6px 10px; margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--line); }
+.grp { display: flex; gap: 2px; }
+.tile { display: grid; justify-items: center; min-width: 30px; padding: 2px 4px 3px; border-radius: 6px; background: var(--surface-2); border: 1px solid transparent; }
+.tile .g { font-family: var(--font-ui); font-size: 17px; line-height: 1.9; }
+.tile .k { font-family: var(--font-mono); font-size: 10px; color: var(--muted); line-height: 1.2; white-space: nowrap; }
+.tile.done { background: var(--ok-soft); }
+.tile.done .k { color: var(--ok); }
+.tile.cur { border-color: var(--accent); background: var(--accent-soft); }
+.tile.cur .k { color: var(--ink); font-weight: 700; }
+
+.stats { display: flex; flex-wrap: wrap; gap: 6px 22px; margin-top: 14px; font-size: 13px; color: var(--muted); }
+.stats b { font-family: var(--font-mono); font-size: 15px; color: var(--ink); font-variant-numeric: tabular-nums; margin-left: 4px; }
+
+.finish { margin-top: 14px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; background: var(--ok-soft); color: var(--ok); border-radius: var(--r); padding: 10px 14px; font-weight: 600; }
+.finish button { margin-left: auto; border: 0; background: var(--ok); color: var(--surface); border-radius: 8px; padding: 4px 14px; cursor: pointer; font-weight: 600; }
+.row-actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+.btn { border: 1px solid var(--line); background: var(--surface-2); border-radius: 8px; padding: 3px 12px; cursor: pointer; font-size: 13px; }
+
+/* Guide */
+.guide h2 { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; font-family: var(--font-mono); font-weight: 500; }
+.next { display: flex; align-items: center; gap: 14px; }
+.next .big { font-family: var(--font-ui); font-size: 46px; line-height: 1.6; min-width: 72px; height: 76px; display: grid; place-items: center; background: var(--accent-soft); border-radius: 12px; padding: 0 8px; }
+.combo { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; font-size: 14px; }
+kbd { font-family: var(--font-mono); font-weight: 700; font-size: 14px; display: inline-grid; place-items: center; min-width: 30px; height: 30px; padding: 0 7px;
+  border: 1px solid var(--key-edge); border-bottom-width: 3px; border-radius: 6px; background: var(--key); }
+kbd.dim { opacity: .45; }
+.finger { margin-top: 8px; font-size: 13px; color: var(--muted); display: flex; align-items: center; gap: 6px; }
+.finger i { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+.explain { margin-top: 10px; font-size: 13.5px; line-height: 1.75; background: var(--surface-2); border-radius: 8px; padding: 8px 10px; }
+.explain:empty { display: none; }
+.err { margin-top: 10px; font-size: 13.5px; color: var(--bad); background: var(--bad-soft); border-radius: 8px; padding: 6px 10px; }
+.altbuf { margin-top: 10px; display: flex; gap: 4px; align-items: center; font-size: 13px; color: var(--muted); }
+.altbuf span { font-family: var(--font-mono); font-size: 18px; width: 26px; height: 32px; display: grid; place-items: center; border-radius: 6px; background: var(--surface-2); color: var(--ink); }
+.altbuf span.on { background: var(--accent); color: var(--accent-ink); }
+.legend { margin-top: 14px; padding-top: 10px; border-top: 1px solid var(--line); display: grid; grid-template-columns: 1fr 1fr; gap: 2px 10px; font-size: 12px; color: var(--muted); }
+.legend span { display: flex; align-items: center; gap: 6px; }
+.legend i { width: 9px; height: 9px; border-radius: 2px; display: inline-block; }
+@media (max-width: 900px) { .legend { display: none; } .next .big { font-size: 36px; height: 60px; min-width: 60px; } }
+
+/* Keyboard */
+.kbd { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 10px; display: grid; gap: 5px; user-select: none; -webkit-user-select: none; touch-action: manipulation; }
+.krow { display: flex; gap: 5px; }
+.key { flex: 1 1 0; min-width: 0; height: 54px; border: 1px solid var(--key-edge); border-bottom: 3px solid var(--key-shadow); background: var(--key); border-radius: 7px;
+  position: relative; cursor: pointer; padding: 0; display: grid; grid-template-rows: 1fr 1fr; align-items: center; overflow: hidden; }
+.key::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 3px; background: var(--fc, transparent); opacity: .7; }
+.key .s, .key .n { font-family: var(--font-ui); line-height: 1; text-align: right; padding-right: 6px; white-space: nowrap; }
+.key .s { font-size: 12px; color: var(--muted); }
+.key .n { font-size: 17px; }
+.key .l { position: absolute; left: 5px; top: 3px; font-family: var(--font-mono); font-size: 10px; color: var(--muted); }
+.key.wide { flex-grow: 1.6; } .key.wider { flex-grow: 2.3; } .key.space { flex-grow: 7; }
+.key.mod { display: grid; place-items: center; grid-template-rows: 1fr; font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
+.kbd.shifted .key .s { font-size: 17px; color: var(--ink); }
+.kbd.shifted .key .n { font-size: 12px; color: var(--muted); }
+.key.hint { background: var(--accent); border-color: var(--accent); }
+.key.hint .s, .key.hint .n, .key.hint .l, .key.mod.hint { color: var(--accent-ink); }
+.key.on { background: var(--accent-soft); color: var(--ink); }
+.key.good { background: var(--ok); border-color: var(--ok); }
+.key.good .s, .key.good .n, .key.good .l { color: var(--surface); }
+.key.bad { background: var(--bad); border-color: var(--bad); }
+.key.bad .s, .key.bad .n, .key.bad .l { color: var(--surface); }
+.key:active { transform: translateY(1px); }
+.kbd-tools { display: flex; justify-content: space-between; gap: 10px; margin-top: 8px; font-size: 12px; color: var(--muted); flex-wrap: wrap; }
+.kbd-tools label { display: flex; gap: 6px; align-items: center; cursor: pointer; }
+.key .l i { font-style: normal; }
+@media (max-width: 900px) {
+  .kbdwrap { position: sticky; bottom: 0; z-index: 5; background: var(--bg); padding-block: 6px env(safe-area-inset-bottom, 0px); }
+  .kbd-tools span { display: none; }
+  .items { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 6px; }
+  .items button { flex: 0 0 auto; }
+}
+@media (max-width: 600px) {
+  .kbd { padding: 6px 4px; gap: 4px; border-radius: 10px; }
+  .krow { gap: 3px; }
+  .key { height: 46px; border-radius: 5px; }
+  .key .n { font-size: 15px; padding-right: 3px; } .key .s { font-size: 10px; padding-right: 3px; }
+  .kbd.shifted .key .s { font-size: 15px; } .kbd.shifted .key .n { font-size: 10px; }
+  .key .l { font-size: 8px; left: 3px; top: 1px; }
+  .key .l i { display: none; }
+  .key.mod { font-size: 10px; }
+  .stage { padding: 12px 14px; }
+  .tile .g { font-size: 15px; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+
+/* Reference pages */
+.page { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px; }
+.page h1 { font-family: var(--font-display); font-size: 24px; margin: 0 0 4px; text-wrap: balance; }
+.page h3 { font-size: 16px; margin: 18px 0 6px; }
+.page p, .page li { max-width: 68ch; }
+.alt-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 6px; margin-top: 14px; }
+.alt-cell { display: flex; align-items: center; justify-content: space-between; gap: 8px; border: 1px solid var(--line); border-radius: 8px; padding: 4px 10px; background: var(--surface-2); }
+.alt-cell code { font-family: var(--font-mono); font-size: 13px; font-variant-numeric: tabular-nums; }
+.alt-cell span { font-size: 22px; line-height: 1.9; }
+.alt-cell small { display: block; font-size: 10px; color: var(--muted); text-align: right; line-height: 1; }
+.keymap-wrap { overflow-x: auto; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand"><b>Win Innwa</b><span>မြန်မာ လက်ကွက် လေ့ကျင့်ခန်း</span></div>
+    <nav class="tabs" role="tablist">
+      <button id="tab-practice" role="tab" aria-selected="true" data-view="practice">လေ့ကျင့်ရန်</button>
+      <button id="tab-alt" role="tab" aria-selected="false" data-view="alt">Alt ကုဒ်ဇယား</button>
+      <button id="tab-help" role="tab" aria-selected="false" data-view="help">အသုံးပြုနည်း</button>
+    </nav>
+  </header>
+
+  <section id="view-practice">
+    <div class="levels" id="levels" aria-label="အဆင့်ရွေးရန်"></div>
+    <div class="items" id="items" aria-label="လေ့ကျင့်ခန်း"></div>
+    <div class="work">
+      <div class="stage">
+        <p class="note" id="note"></p>
+        <p class="target" id="target" lang="my"></p>
+        <div class="tiles" id="tiles" aria-label="ရိုက်ရမည့် ကီးအစဉ်"></div>
+        <div class="stats">
+          <span>အမြန်နှုန်း<b id="st-speed">0</b> ကီး/မိနစ်</span>
+          <span>တိကျမှု<b id="st-acc">100%</b></span>
+          <span>အမှား<b id="st-err">0</b></span>
+          <span>ပြီးစီး<b id="st-prog">0/0</b></span>
+        </div>
+        <div class="finish" id="finish" hidden>
+          <span id="finish-text"></span>
+          <button id="btn-next" type="button">နောက်တစ်ခု ↵</button>
+        </div>
+        <div class="row-actions">
+          <button class="btn" id="btn-restart" type="button">ပြန်စရန် (Esc)</button>
+          <button class="btn" id="btn-skip" type="button">ကျော်ရန်</button>
+        </div>
+      </div>
+
+      <aside class="guide" aria-live="polite">
+        <h2>နောက်ထပ် နှိပ်ရန်</h2>
+        <div class="next">
+          <div class="big" id="g-big"></div>
+          <div>
+            <div class="combo" id="g-combo"></div>
+            <div class="finger" id="g-finger"></div>
+          </div>
+        </div>
+        <div class="altbuf" id="g-alt" hidden></div>
+        <div class="err" id="g-err" hidden></div>
+        <div class="explain" id="g-explain"></div>
+        <div class="legend">
+          <span><i style="background:var(--f1)"></i>လက်သန်း</span>
+          <span><i style="background:var(--f2)"></i>လက်သူကြွယ်</span>
+          <span><i style="background:var(--f3)"></i>လက်ခလယ်</span>
+          <span><i style="background:var(--f4)"></i>လက်ညှိုး (ဘယ်)</span>
+          <span><i style="background:var(--f5)"></i>လက်ညှိုး (ညာ)</span>
+          <span><kbd style="min-width:18px;height:18px;font-size:10px">␣</kbd>လက်မ</span>
+        </div>
+      </aside>
+
+      <div class="kbdwrap">
+        <div class="kbd" id="kbd"></div>
+        <div class="kbd-tools">
+          <label><input type="checkbox" id="opt-kbd" checked> ကီးဘုတ်ပုံ ပြရန်</label>
+          <span>ကွန်ပျူတာ: ကီးဘုတ်ကို English (US) ထားပြီး တိုက်ရိုက်ရိုက်ပါ · ဖုန်း/တက်ဘလက်: အောက်က ကီးများကို နှိပ်ပါ</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="view-alt" hidden>
+    <div class="page">
+      <h1>Alt ကုဒ် ဇယား</h1>
+      <p>ကွန်ပျူတာတွင် <kbd>Alt</kbd> ကို ဖိထားပြီး ညာဘက် numpad မှ ကုဒ်ကို (ဥပမာ 0168) ရိုက်၊ ပြီးမှ <kbd>Alt</kbd> ကို လွှတ်ပါ။ ဖုန်းနှင့် တက်ဘလက်တွင် ဤ app ၏ <kbd>Alt</kbd> ကီးကို တစ်ချက်နှိပ်ပြီး ဂဏန်း ၄ လုံး နှိပ်ပါ။</p>
+      <div class="alt-grid" id="alt-grid"></div>
+      <h3>ကီးဘုတ် ဇယား</h3>
+      <div class="keymap-wrap"><div class="kbd" id="kbd-ref" style="min-width:640px"></div></div>
+    </div>
+  </section>
+
+  <section id="view-help" hidden>
+    <div class="page">
+      <h1>အသုံးပြုနည်း</h1>
+      <h3>Win Innwa ရိုက်နည်း အခြေခံ</h3>
+      <ul>
+        <li>Win Innwa သည် Unicode မဟုတ်ပါ။ English ကီးဘုတ်ပေါ်မှ စာလုံးတစ်လုံးချင်းကို မြန်မာ glyph တစ်ခုစီ အဖြစ် ပြသည့် ဖောင့်ဖြစ်သည်။</li>
+        <li>မြင်ရသည့်အစဉ်အတိုင်း ဘယ်မှညာ ရိုက်ရသည်။ ဥပမာ <b>ကျောင်း</b> = <kbd>a</kbd><kbd>u</kbd><kbd>s</kbd><kbd>m</kbd><kbd>i</kbd><kbd>f</kbd><kbd>;</kbd> (ေ ကို က ရှေ့မှာ အရင်ရိုက်)။</li>
+        <li><b>မြန်မာ</b> = <kbd>j</kbd><kbd>r</kbd><kbd>e</kbd><kbd>f</kbd><kbd>r</kbd><kbd>m</kbd> (ြ ကို မ ရှေ့မှာ ရိုက်)။</li>
+        <li>ကင်းစီး (င်္) ကို အောက်ဗျည်း၏ နောက်မှ <kbd>⇧</kbd><kbd>F</kbd> ရိုက်သည်။ <b>မင်္ဂလာ</b> = <kbd>r</kbd><kbd>*</kbd><kbd>F</kbd><kbd>v</kbd><kbd>m</kbd>။</li>
+        <li>ပါဠိ ဆင့်ဗျည်းများ (္ဓ ္မ ္တ ...) ကို Alt ကုဒ်ဖြင့် အပေါ်ဗျည်းနောက်မှ ရိုက်သည်။ <b>ဗုဒ္ဓ</b> = <kbd>A</kbd><kbd>k</kbd><kbd>'</kbd> + <kbd>Alt</kbd> 0168။</li>
+        <li>ပုံသဏ္ဌာန်ကွဲ ကီးများ (ဥပမာ ု = <kbd>k</kbd> သို့ <kbd>K</kbd>၊ ြ = <kbd>j</kbd> <kbd>M</kbd> <kbd>N</kbd> <kbd>B</kbd>၊ ့ = <kbd>h</kbd> <kbd>U</kbd> <kbd>Y</kbd>) ကို app က လက်ခံပေးသည်။ လမ်းညွှန်တွင် ပိုသင့်တော်သော ကီးကို ပြသည်။</li>
+      </ul>
+      <h3>အဆင့်များ</h3>
+      <ol id="help-levels"></ol>
+      <h3>ကီးဘုတ် ကီးများ</h3>
+      <ul>
+        <li><kbd>Enter</kbd> — စာကြောင်းပြီးလျှင် နောက်တစ်ခုသို့</li>
+        <li><kbd>Esc</kbd> — လက်ရှိစာကြောင်းကို ပြန်စ</li>
+        <li>အမှားရိုက်လျှင် အနီရောင်ပြပြီး မှန်သည့်ကီး မနှိပ်မချင်း ရှေ့မဆက်ပါ။ တိုးတက်မှုကို ဤ browser ထဲတွင် မှတ်ထားသည်။</li>
+      </ul>
+    </div>
+  </section>
+</div>
+
+<script src="core.js"></script>
+<script>
+(function () {
+  'use strict';
+  var W = window.WinCore;
+  var $ = function (id) { return document.getElementById(id); };
+
+  // Physical US layout: [normal, shifted, e.code]
+  var ROWS = [
+    [['`', '~', 'Backquote'], ['1', '!', 'Digit1'], ['2', '@', 'Digit2'], ['3', '#', 'Digit3'], ['4', '$', 'Digit4'], ['5', '%', 'Digit5'], ['6', '^', 'Digit6'],
+      ['7', '&', 'Digit7'], ['8', '*', 'Digit8'], ['9', '(', 'Digit9'], ['0', ')', 'Digit0'], ['-', '_', 'Minus'], ['=', '+', 'Equal']],
+    [['q', 'Q', 'KeyQ'], ['w', 'W', 'KeyW'], ['e', 'E', 'KeyE'], ['r', 'R', 'KeyR'], ['t', 'T', 'KeyT'], ['y', 'Y', 'KeyY'], ['u', 'U', 'KeyU'], ['i', 'I', 'KeyI'],
+      ['o', 'O', 'KeyO'], ['p', 'P', 'KeyP'], ['[', '{', 'BracketLeft'], [']', '}', 'BracketRight'], ['\\', '|', 'Backslash']],
+    [['a', 'A', 'KeyA'], ['s', 'S', 'KeyS'], ['d', 'D', 'KeyD'], ['f', 'F', 'KeyF'], ['g', 'G', 'KeyG'], ['h', 'H', 'KeyH'], ['j', 'J', 'KeyJ'], ['k', 'K', 'KeyK'],
+      ['l', 'L', 'KeyL'], [';', ':', 'Semicolon'], ["'", '"', 'Quote']],
+    [['z', 'Z', 'KeyZ'], ['x', 'X', 'KeyX'], ['c', 'C', 'KeyC'], ['v', 'V', 'KeyV'], ['b', 'B', 'KeyB'], ['n', 'N', 'KeyN'], ['m', 'M', 'KeyM'],
+      [',', '<', 'Comma'], ['.', '>', 'Period'], ['/', '?', 'Slash']]
+  ];
+  var CODE = {}, CHARKEY = {};
+  ROWS.forEach(function (r) { r.forEach(function (k) { CODE[k[2]] = k; CHARKEY[k[0]] = { k: k, shift: false }; CHARKEY[k[1]] = { k: k, shift: true }; }); });
+  for (var d = 0; d < 10; d++) CODE['Numpad' + d] = [String(d), String(d), 'Digit' + d];
+
+  // Touch-typing finger for each key: [hand, finger] finger 1=pinky..4=index
+  var FINGER = {};
+  [['`1qaz', 'L', 1], ['2wsx', 'L', 2], ['3edc', 'L', 3], ['45rtfgvb', 'L', 4], ['67yuhjnm', 'R', 4], ['8ik,', 'R', 3], ['9ol.', 'R', 2], ["0-=p[]\\;'/", 'R', 1]]
+    .forEach(function (f) { Array.from(f[0]).forEach(function (c) { FINGER[c] = [f[1], f[2]]; }); });
+  var FNAME = { 1: 'လက်သန်း', 2: 'လက်သူကြွယ်', 3: 'လက်ခလယ်', 4: 'လက်ညှိုး' };
+  function fingerColor(f) { return f[2] === 4 || f[1] === 4 ? (f[0] === 'L' ? 'var(--f4)' : 'var(--f5)') : 'var(--f' + f[1] + ')'; }
+
+  var CP1252 = { '’': 146, '‘': 145 };
+  function charCode(ch) { if (CP1252[ch]) return CP1252[ch]; var c = ch.charCodeAt(0); return c >= 160 && c <= 255 ? c : 0; }
+
+  function isMark(s) { var c = s.charCodeAt(0); return (c >= 0x102B && c <= 0x103E) || c === 0x1039; }
+  function glyphOf(u) {
+    var g = W.GLYPH[u]; if (g === undefined) return u;
+    if (g === 'င်္' || g.indexOf('င်္') === 0) return g + '◌';
+    return isMark(g) ? '◌' + g : g;
+  }
+  function keyName(u) {
+    if (u === ' ') return 'Space';
+    if (u[0] === '#' && u.length > 1) return 'Alt 0' + u.slice(1);
+    var ck = CHARKEY[u]; if (!ck) return u;
+    var cap = /[a-z]/.test(ck.k[0]) ? ck.k[0].toUpperCase() : ck.k[0];
+    return ck.shift ? '⇧' + cap : cap;
+  }
+
+  // ---------- progress ----------
+  var STORE = 'winInnwaTyping.v1';
+  var prog = { levels: {}, last: { level: 0, item: 0 } };
+  try { var raw = localStorage.getItem(STORE); if (raw) prog = Object.assign(prog, JSON.parse(raw)); } catch (e) {}
+  function save() { try { localStorage.setItem(STORE, JSON.stringify(prog)); } catch (e) {} }
+  function lvlProg(li) { return prog.levels[li] || (prog.levels[li] = { done: {} }); }
+
+  // ---------- state ----------
+  var S = { level: 0, item: 0, clusters: [], units: [], pos: 0, correct: 0, errors: 0, t0: 0, done: false, shift: false, alt: false, altBuf: '', altHeld: false, lastAlt: 0 };
+
+  function load(level, item) {
+    var L = W.LEVELS[level];
+    S.level = level; S.item = Math.max(0, Math.min(item, L.items.length - 1));
+    S.clusters = W.encode(L.items[S.item]);
+    S.units = []; S.clusters.forEach(function (c) { c.start = S.units.length; S.units = S.units.concat(c.units); c.end = S.units.length; });
+    S.pos = 0; S.correct = 0; S.errors = 0; S.t0 = 0; S.done = false; S.alt = false; S.altBuf = '';
+    prog.last = { level: S.level, item: S.item }; save();
+    $('note').textContent = L.note;
+    renderLevels(); renderItems(); renderTarget(); renderTiles(); hideErr(); $('finish').hidden = true; update();
+  }
+
+  function renderLevels() {
+    var box = $('levels'); box.innerHTML = '';
+    W.LEVELS.forEach(function (L, i) {
+      var p = lvlProg(i), n = Object.keys(p.done).length, b = document.createElement('button');
+      b.className = 'lvl'; b.type = 'button'; b.setAttribute('aria-pressed', i === S.level);
+      var diff = ''; for (var k = 0; k < 10; k++) diff += '<i class="' + (k <= i ? 'on' : '') + '"></i>';
+      b.innerHTML = '<small>အဆင့် ' + (i + 1) + ' · ' + L.tag + '</small><span class="nm">' + L.name + '</span><span class="diff">' + diff + '</span>' +
+        '<span class="bar"><i style="width:' + Math.round(100 * n / L.items.length) + '%"></i></span>';
+      b.addEventListener('click', function () { load(i, firstTodo(i)); });
+      box.appendChild(b);
+    });
+    var cur = box.children[S.level]; if (cur && cur.scrollIntoView) cur.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  }
+  function firstTodo(li) { var p = lvlProg(li), L = W.LEVELS[li]; for (var i = 0; i < L.items.length; i++) if (!p.done[i]) return i; return 0; }
+  function renderItems() {
+    var box = $('items'), p = lvlProg(S.level); box.innerHTML = '';
+    W.LEVELS[S.level].items.forEach(function (t, i) {
+      var b = document.createElement('button'); b.type = 'button'; b.textContent = i + 1; b.title = t;
+      if (p.done[i]) { b.className = 'done'; b.title += ' · ' + p.done[i] + '%'; }
+      if (i === S.item) b.setAttribute('aria-current', 'true');
+      b.addEventListener('click', function () { load(S.level, i); });
+      box.appendChild(b);
+    });
+  }
+  function renderTarget() {
+    var box = $('target'); box.innerHTML = '';
+    S.clusters.forEach(function (c, i) {
+      var s = document.createElement('span'); s.className = 'c' + (c.text === ' ' ? ' sp' : ''); s.textContent = c.text === ' ' ? ' ' : c.text; c.el = s; box.appendChild(s);
+    });
+  }
+  function renderTiles() {
+    var box = $('tiles'); box.innerHTML = ''; S.tileEls = [];
+    S.clusters.forEach(function (c) {
+      var g = document.createElement('div'); g.className = 'grp';
+      c.units.forEach(function (u) {
+        var t = document.createElement('div'); t.className = 'tile';
+        t.innerHTML = '<span class="g"></span><span class="k"></span>';
+        t.firstChild.textContent = u === ' ' ? '␣' : glyphOf(u); t.lastChild.textContent = keyName(u);
+        g.appendChild(t); S.tileEls.push(t);
+      });
+      box.appendChild(g);
+    });
+  }
+
+  function update() {
+    S.clusters.forEach(function (c) { c.el.className = 'c' + (c.text === ' ' ? ' sp' : '') + (S.pos >= c.end ? ' done' : (S.pos >= c.start ? ' cur' : '')); });
+    S.tileEls.forEach(function (t, i) { t.className = 'tile' + (i < S.pos ? ' done' : (i === S.pos ? ' cur' : '')); });
+    var cur = S.tileEls[S.pos]; if (cur && cur.scrollIntoView && cur.offsetParent) { /* keep in view on phones */ }
+    var mins = S.t0 ? (Date.now() - S.t0) / 60000 : 0;
+    $('st-speed').textContent = mins > 0.02 ? Math.round(S.correct / mins) : 0;
+    $('st-acc').textContent = acc() + '%';
+    $('st-err').textContent = S.errors;
+    $('st-prog').textContent = S.pos + '/' + S.units.length;
+    renderGuide(); renderHints();
+  }
+  function acc() { var t = S.correct + S.errors; return t ? Math.round(100 * S.correct / t) : 100; }
+
+  // ---------- guide ----------
+  function renderGuide() {
+    var u = S.units[S.pos], combo = $('g-combo'), fin = $('g-finger'), ex = $('g-explain'), alt = $('g-alt');
+    if (S.done || u === undefined) {
+      $('g-big').textContent = '✓'; combo.innerHTML = '<span>ပြီးပါပြီ — <kbd>Enter</kbd> နှိပ်ပါ</span>'; fin.innerHTML = ''; ex.textContent = ''; alt.hidden = true; return;
+    }
+    $('g-big').textContent = u === ' ' ? '␣' : glyphOf(u);
+    var h = '', f = null;
+    if (u[0] === '#' && u.length > 1) {
+      var code = '0' + u.slice(1);
+      h = '<kbd>Alt</kbd> ဖိထား + ' + Array.from(code).map(function (d) { return '<kbd>' + d + '</kbd>'; }).join('') + ' ပြီး လွှတ်';
+      alt.hidden = false;
+      alt.innerHTML = 'ရိုက်ပြီး: ' + Array.from(code).map(function (d, i) { return '<span class="' + (i < S.altBuf.length ? 'on' : '') + '">' + (i < S.altBuf.length ? S.altBuf[i] : d) + '</span>'; }).join('');
+      fin.innerHTML = '<i style="background:var(--f1)"></i>ဘယ်လက်မ (Alt) + ညာလက် (numpad)';
+    } else {
+      alt.hidden = true;
+      if (u === ' ') { h = '<kbd style="min-width:120px">Space</kbd>'; fin.innerHTML = '<i style="background:var(--muted)"></i>လက်မ'; }
+      else {
+        var ck = CHARKEY[u], cap = /[a-z]/.test(ck.k[0]) ? ck.k[0].toUpperCase() : ck.k[0];
+        f = FINGER[ck.k[0]];
+        h = ck.shift ? '<kbd>⇧ Shift</kbd> + <kbd>' + esc(cap) + '</kbd>' : '<kbd>' + esc(cap) + '</kbd>';
+        var hand = f[0] === 'L' ? 'ဘယ်' : 'ညာ';
+        fin.innerHTML = '<i style="background:' + fingerColor([f[0], f[1]]) + '"></i>' + hand + ' ' + FNAME[f[1]] + (ck.shift ? ' · Shift ကို ' + (f[0] === 'L' ? 'ညာ' : 'ဘယ်') + ' လက်သန်းဖြင့်' : '');
+      }
+    }
+    combo.innerHTML = h;
+    ex.innerHTML = explain(u);
+  }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function explain(u) {
+    var c = S.clusters.filter(function (c) { return S.pos >= c.start && S.pos < c.end; })[0];
+    var where = c ? '<b>' + esc(c.text) + '</b> ကို ' + c.units.map(function (x) { return '<kbd style="height:22px;min-width:22px;font-size:11px">' + esc(keyName(x)) + '</kbd>'; }).join(' ') + ' ဖြင့် ရိုက်သည်။ ' : '';
+    var t = {
+      'a': 'ေ ကို ဗျည်းမတိုင်မီ အရင်ရိုက်ပါ။ Win ဖောင့်တွင် မြင်ရသည့်အစဉ်အတိုင်း ရိုက်ရသည်။',
+      'j': 'ြ (ကျဉ်း) ကို ဗျည်းရှေ့တွင် ရိုက်ပါ။', 'M': 'ြ (ကျယ်) — က တ သ အ ကဲ့သို့ ကျယ်သော ဗျည်းအတွက်။ ဗျည်းရှေ့တွင် ရိုက်ပါ။',
+      'N': 'ြ (အပေါ်ပြတ်၊ ကျဉ်း) — ဗျည်းအပေါ်တွင် သရ ရှိသည့်အခါ။', 'B': 'ြ (အပေါ်ပြတ်၊ ကျယ်) — ဗျည်းအပေါ်တွင် သရ ရှိသည့်အခါ။',
+      '<': 'ြွ တစ်ချက်တည်း (ကျယ်)။', '>': 'ြွ တစ်ချက်တည်း (ကျဉ်း)။',
+      'F': 'ကင်းစီး (င်္) ကို အောက်ဗျည်း ရိုက်ပြီးမှ ရိုက်ပါ။', 'K': 'ု (အရှည်) — အောက်တွင် ဆင့်ဗျည်း၊ ွ သို့ ြ ရှိသည့်အခါ (k လည်း ရသည်)။',
+      'L': 'ူ (အရှည်) — (l လည်း ရသည်)။', 'E': 'န (အမြီးတို) — အောက်တွင် ု ူ ွ ှ ရှိသည့်အခါ (e လည်း ရသည်)။',
+      ':': 'ါ် ကို တစ်ချက်တည်း ရိုက်သည်။', 'I': 'ှု ကို တစ်ချက်တည်း ရိုက်သည်။', 'T': 'ွှ ကို တစ်ချက်တည်း ရိုက်သည်။',
+      'Q': 'ျှ ကို တစ်ချက်တည်း ရိုက်သည်။', 'R': 'ျွ ကို တစ်ချက်တည်း ရိုက်သည်။', 'W': 'ျွှ ကို တစ်ချက်တည်း ရိုက်သည်။',
+      'h': '့ (h, U, Y သုံးခုလုံး ရသည်)။', 'U': '့ (ညာဘက်ရွှေ့) — ာ ါ နောက်တွင်။', 'Y': '့ (ညာဘက်ရွှေ့) — ု ူ ရှိသည့်အခါ။',
+      '*': 'ဂ = Shift + 8', '&': 'ရ = Shift + 7', '0': 'ဝ နှင့် ၀ နှစ်ခုလုံး 0 ကီး ဖြစ်သည်။', '\\': '၏ = \\ ကီး', '/': '။ = / ကီး', '?': '၊ = Shift + /'
+    }[u];
+    if (!t && u[0] === '#' && u.length > 1) {
+      var g = W.GLYPH[u] || '';
+      t = g.indexOf('္') === 0 ? 'ဆင့်ဗျည်း ' + esc(g) + ' — အပေါ်ဗျည်း ရိုက်ပြီးမှ Alt ကုဒ်ဖြင့် ရိုက်ပါ။ ဖုန်းတွင် Alt ကီးနှိပ်ပြီး ဂဏန်း ၄ လုံး နှိပ်ပါ။'
+        : esc(g) + ' ကို Alt ကုဒ်ဖြင့် ရိုက်ပါ။ ဖုန်းတွင် Alt ကီးနှိပ်ပြီး ဂဏန်း ၄ လုံး နှိပ်ပါ။';
+    }
+    return where + (t ? '<br>' + t : '');
+  }
+  function showErr(got) {
+    var e = $('g-err'); e.hidden = false;
+    e.innerHTML = 'မှားသည်: <kbd>' + esc(keyName(got)) + '</kbd> (' + esc(got === ' ' ? '␣' : glyphOf(got)) + ') ကို နှိပ်ခဲ့သည်။ <kbd>' + esc(keyName(S.units[S.pos])) + '</kbd> ကို နှိပ်ပါ။';
+  }
+  function hideErr() { $('g-err').hidden = true; }
+
+  // ---------- keyboard drawing ----------
+  var KEYEL = {};
+  function buildKbd(box, interactive) {
+    box.innerHTML = '';
+    ROWS.forEach(function (r, ri) {
+      var row = document.createElement('div'); row.className = 'krow';
+      if (ri === 3) row.appendChild(mod('⇧ Shift', 'shift', 'wider', interactive));
+      r.forEach(function (k) {
+        var b = document.createElement('button'); b.type = 'button'; b.className = 'key'; b.tabIndex = -1;
+        var f = FINGER[k[0]]; if (f) b.style.setProperty('--fc', fingerColor(f));
+        b.innerHTML = '<span class="l"></span><span class="s"></span><span class="n"></span>';
+        b.children[0].innerHTML = /[a-z]/.test(k[0]) ? k[0].toUpperCase() : esc(k[0]) + '<i> ' + esc(k[1]) + '</i>';
+        b.children[1].textContent = W.GLYPH[k[1]] || k[1];
+        b.children[2].textContent = W.GLYPH[k[0]] || k[0];
+        if (interactive) { KEYEL[k[0]] = b; bindPress(b, function () { vkey(k); }); }
+        row.appendChild(b);
+      });
+      if (ri === 3) row.appendChild(mod('⇧ Shift', 'shift', 'wider', interactive));
+      box.appendChild(row);
+    });
+    if (interactive) {
+      var row = document.createElement('div'); row.className = 'krow';
+      var sp = document.createElement('button'); sp.type = 'button'; sp.className = 'key mod space'; sp.tabIndex = -1; sp.textContent = 'Space';
+      KEYEL[' '] = sp; bindPress(sp, function () { input(' '); });
+      row.appendChild(mod('Alt', 'alt', 'wide', interactive)); row.appendChild(sp);
+      box.appendChild(row);
+    }
+  }
+  function mod(label, kind, cls, interactive) {
+    var b = document.createElement('button'); b.type = 'button'; b.className = 'key mod ' + cls; b.tabIndex = -1; b.textContent = label; b.dataset.mod = kind;
+    if (interactive) bindPress(b, function () { if (kind === 'shift') { S.shift = !S.shift; } else { S.alt = !S.alt; S.altBuf = ''; } update(); });
+    return b;
+  }
+  function bindPress(b, fn) {
+    b.addEventListener('pointerdown', function (e) { e.preventDefault(); fn(); });
+    b.addEventListener('click', function (e) { if (e.detail === 0) fn(); });
+  }
+  function vkey(k) {
+    if (S.alt && /\d/.test(k[0])) { S.altBuf += k[0]; if (S.altBuf.length >= 4) { var c = parseInt(S.altBuf, 10); S.alt = false; S.altBuf = ''; input('#' + c); } else update(); return; }
+    var ch = S.shift ? k[1] : k[0]; S.shift = false; input(ch);
+  }
+  function renderHints() {
+    var kb = $('kbd'); kb.classList.toggle('shifted', S.shift);
+    kb.querySelectorAll('.hint, .on').forEach(function (e) { e.classList.remove('hint', 'on'); });
+    kb.querySelectorAll('[data-mod="shift"]').forEach(function (e) { if (S.shift) e.classList.add('on'); });
+    kb.querySelectorAll('[data-mod="alt"]').forEach(function (e) { if (S.alt || S.altHeld) e.classList.add('on'); });
+    var u = S.units[S.pos]; if (S.done || u === undefined) return;
+    if (u[0] === '#' && u.length > 1) {
+      var code = '0' + u.slice(1);
+      if (!(S.alt || S.altHeld)) kb.querySelectorAll('[data-mod="alt"]').forEach(function (e) { e.classList.add('hint'); });
+      else { var dg = code[S.altBuf.length]; if (dg && KEYEL[dg]) KEYEL[dg].classList.add('hint'); }
+      return;
+    }
+    if (u === ' ') { KEYEL[' '].classList.add('hint'); return; }
+    var ck = CHARKEY[u]; if (!ck) return;
+    KEYEL[ck.k[0]].classList.add('hint');
+    if (ck.shift && !S.shift) {
+      var f = FINGER[ck.k[0]], shifts = kb.querySelectorAll('[data-mod="shift"]');
+      var pick = f && f[0] === 'L' ? shifts[1] : shifts[0]; if (pick) pick.classList.add('hint');
+    }
+  }
+  function flash(u, ok) {
+    var el = null;
+    if (u === ' ') el = KEYEL[' ']; else if (CHARKEY[u]) el = KEYEL[CHARKEY[u].k[0]];
+    else if (u[0] === '#') el = $('kbd').querySelector('[data-mod="alt"]');
+    if (!el) return;
+    el.classList.remove('good', 'bad'); void el.offsetWidth; el.classList.add(ok ? 'good' : 'bad');
+    setTimeout(function () { el.classList.remove('good', 'bad'); }, 160);
+  }
+
+  // ---------- typing ----------
+  function input(u) {
+    if (S.done) { if (u === ' ' || u === '\n') next(); return; }
+    var want = S.units[S.pos];
+    if (!S.t0) S.t0 = Date.now();
+    if (W.same(u, want)) {
+      S.pos++; S.correct++; hideErr(); flash(u, true);
+      if (S.pos >= S.units.length) finish();
+    } else { S.errors++; showErr(u); flash(u, false); }
+    update();
+  }
+  function finish() {
+    S.done = true;
+    var a = acc(), mins = (Date.now() - S.t0) / 60000, kpm = mins > 0 ? Math.round(S.correct / mins) : 0;
+    var p = lvlProg(S.level); p.done[S.item] = Math.max(p.done[S.item] || 0, a); save();
+    $('finish-text').textContent = 'ပြီးပါပြီ · တိကျမှု ' + a + '% · ' + kpm + ' ကီး/မိနစ်';
+    $('finish').hidden = false; renderItems(); renderLevels();
+  }
+  function next() {
+    var L = W.LEVELS[S.level];
+    if (S.item + 1 < L.items.length) load(S.level, S.item + 1);
+    else if (S.level + 1 < W.LEVELS.length) load(S.level + 1, firstTodo(S.level + 1));
+    else load(S.level, 0);
+  }
+  $('btn-next').addEventListener('click', next);
+  $('btn-restart').addEventListener('click', function () { load(S.level, S.item); });
+  $('btn-skip').addEventListener('click', next);
+
+  function practiceVisible() { return !$('view-practice').hidden; }
+  document.addEventListener('keydown', function (e) {
+    if (!practiceVisible()) return;
+    var tg = e.target && e.target.tagName; if (tg === 'INPUT' || tg === 'SELECT' || tg === 'TEXTAREA') return;
+    if (e.key === 'Alt' || e.key === 'AltGraph') { e.preventDefault(); S.altHeld = true; S.altBuf = ''; update(); return; }
+    var m = /^(?:Digit|Numpad)(\d)$/.exec(e.code);
+    if ((e.altKey || S.altHeld) && m) { e.preventDefault(); S.altBuf += m[1]; update(); return; }
+    if (e.ctrlKey || e.metaKey) return;
+    if (e.key === 'Escape') { e.preventDefault(); load(S.level, S.item); return; }
+    if (e.key === 'Enter') { e.preventDefault(); if (S.done) next(); return; }
+    if (e.key === 'Backspace' || e.key === 'Tab') { e.preventDefault(); return; }
+    if (e.code === 'Space') { e.preventDefault(); input(' '); return; }
+    // Prefer the character the layout produced; fall back to the physical key when a non-English layout is active.
+    if (e.key && e.key.length === 1 && CHARKEY[e.key]) { e.preventDefault(); input(e.key); return; }
+    var k = CODE[e.code];
+    if (k) { e.preventDefault(); input(e.shiftKey ? k[1] : k[0]); return; }
+    if (e.key && e.key.length === 1) {
+      var cc = charCode(e.key);
+      if (cc && Date.now() - S.lastAlt > 400) { e.preventDefault(); input('#' + cc); }
+    }
+  });
+  document.addEventListener('keyup', function (e) {
+    if (e.key === 'Alt' || e.key === 'AltGraph') {
+      e.preventDefault(); S.altHeld = false;
+      if (S.altBuf.length >= 3) { var c = parseInt(S.altBuf, 10); S.altBuf = ''; S.lastAlt = Date.now(); input('#' + c); }
+      else { S.altBuf = ''; update(); }
+    }
+  });
+  window.addEventListener('blur', function () { if (S.altHeld) { S.altHeld = false; S.altBuf = ''; update(); } });
+
+  // ---------- views ----------
+  document.querySelectorAll('nav.tabs button').forEach(function (b) {
+    b.addEventListener('click', function () {
+      document.querySelectorAll('nav.tabs button').forEach(function (x) { x.setAttribute('aria-selected', x === b); });
+      ['practice', 'alt', 'help'].forEach(function (v) { $('view-' + v).hidden = v !== b.dataset.view; });
+    });
+  });
+  $('opt-kbd').addEventListener('change', function () { $('kbd').hidden = !this.checked; try { localStorage.setItem(STORE + '.kbd', this.checked ? '1' : '0'); } catch (e) {} });
+  try { if (localStorage.getItem(STORE + '.kbd') === '0') { $('opt-kbd').checked = false; $('kbd').hidden = true; } } catch (e) {}
+
+  // Alt table + reference keyboard + help levels
+  var grid = $('alt-grid');
+  W.ALT.slice().sort(function (a, b) { return a[0] - b[0]; }).forEach(function (a) {
+    var d = document.createElement('div'); d.className = 'alt-cell';
+    d.innerHTML = '<code>Alt 0' + a[0] + '</code><div><span></span>' + (a[2] ? '<small>' + a[2] + '</small>' : '') + '</div>';
+    d.querySelector('span').textContent = isMark(a[1]) ? '◌' + a[1] : (a[1].indexOf('င်္') === 0 ? a[1].replace('င်္', 'င်္◌') : a[1]);
+    grid.appendChild(d);
+  });
+  buildKbd($('kbd-ref'), false);
+  var hl = $('help-levels');
+  W.LEVELS.forEach(function (L) { var li = document.createElement('li'); li.textContent = L.name + ' (' + L.items.length + ' ခု) — ' + L.note; hl.appendChild(li); });
+
+  buildKbd($('kbd'), true);
+  var last = prog.last || { level: 0, item: 0 };
+  load(Math.min(last.level || 0, W.LEVELS.length - 1), last.item || 0);
+
+  if ('serviceWorker' in navigator && location.protocol === 'https:') {
+    navigator.serviceWorker.register('sw.js').catch(function () {});
+  }
+})();
+</script>
+</body>
+</html>

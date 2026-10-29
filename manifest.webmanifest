@@ -1,0 +1,10 @@
+{
+  "name": "Win Innwa လက်ကွက် လေ့ကျင့်ခန်း",
+  "short_name": "Win လက်ကွက်",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0e1319",
+  "theme_color": "#171e27",
+  "icons": [{ "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }]
+}
